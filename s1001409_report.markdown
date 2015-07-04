@@ -1,0 +1,55 @@
+
+## POSIX real-time scheduling: 
+POSIX real-time scheduling extended to include scheduling on a per thread
+basis; the scheduling scope is either done globally across all threads in all processes, or performed
+locally within each process
+---------------------------------------------------------------------------------------------------------------------------------
+POSIX Real-time Related Standards
+Of the more than 30 POSIX standards the seven standards listed in Table 1 are especially relevant to the
+development of real-time and embedded systems. With the first three standards (1003.1a,1b,1c) being the
+most widely supported. POSIX 1003.1a defines the interface to basic operating system functions, and was
+the first to be adopted in 1990 [1][6]. Real-time extensions are defined in the standards 1003.1b, 1003.1d,
+1003.1j and 1003.21 [7][8][9][10]. However, the original real-time extensions, defined by 1003.1b, are the
+only standard commonly implemented. Support for multiple threads in a process is provided in a separate
+standard, POSIX 1003.1c. POSIX also includes support for high availability in the 1003.1h standard [11].
+Commercial support for POSIX varies widely. Because POSIX 1003.1a is based on UNIX, any UNIX
+based operating system will naturally be very close to the standard. To be POSIX conformant to the
+standard, the operating system, and hardware platform, has to be certified using a suite of tests [12].
+Currently test suites exist only for POSIX 1003.1a. Because POSIX is structured as a set of optional
+features, operating system vendors can choose to implement portions of POSIX and still be compliant to
+POSIX. Compliance only requires the vendor to state which features of POSIX are and are not
+implemented. This is a source of confusion because, for marketing reasons, almost all vendors report that
+they are POSIX compliant.
+2.2.1 POSIX profiles
+Embedded systems typically have space and resource limitations, and an operating system that includes all
+the features of POSIX may not be appropriate. The POSIX 1003.13 profile standard was defined to address
+these types of systems [13]. POSIX 1003.13 does not contain any additional features; instead it groups the
+functions from existing POSIX standards into units of functionality. The profiles are based on whether or
+not an operating system supports more than one process and a file system. The four current profiles are
+summarized in Table 2.
+Table 2: POSIX 1003.13 Profiles
+Profile
+Number of
+Processes Threads File System
+54 Multiple Yes Yes
+53 Multiple Yes No
+52 Single Yes Yes
+51 Single Yes No
+2.2.2 POSIX real-time extensions
+POSIX 1003.1b, as well as 1003.1d and 1003.1j define extensions useful for development of real-time
+systems. Functions defined in the original real-time extension standard 1003.1b are supported across a
+wider number of operating systems than the other two specifications. For this reason this paper focuses on
+POSIX 1003.1b. The following features constitute the bulk of the features defined in POSIX 1003.1b:
+• Timers: Periodic timers, delivery is accomplished using POSIX signals
+• Priority scheduling: Fixed priority preemptive scheduling with a minimum of 32 priority levels
+• Real-time signals: Additional signals with multiple levels of priority
+• Semaphores: Named and memory counting semaphores
+• Memory queues: Message passing using named queues
+• Shared memory: Named memory regions shared between multiple processes
+• Memory locking: Functions to prevent virtual memory swapping of physical memory pages
+Figure 1 shows C code for creating and using a POSIX timer. Creating a timer consists of two steps:
+specifying a signal to be used to deliver the timer, and creating/setting the timer itself. In this example we
+use the highest priority real-time signal (SIGRTMIN) to asynchronously call the timer handler routine. Two
+values must be specified for the timer: the initial expiration time (it_value) and the frequency (tv_sec). The
+structure (itimerspec) allows nanosecond time specification; however, actual resolution is dependent on the
+system. The POSIX call clock_getres() can be used to determine the actual resolution, typically 10 or 1 ms.
